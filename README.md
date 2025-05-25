@@ -20,7 +20,7 @@ This project aims to help identify mental health conditions from user-generated 
 
 ---
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 - **Languages**: Python  
 - **Libraries**: PRAW, Pandas, NumPy, Scikit-learn, Transformers (Hugging Face), PyTorch, Matplotlib, Seaborn  
