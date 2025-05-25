@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f9fc;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: bold;
+            color: #34495e;
+        }
+        textarea {
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #3498db;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .list-group-item {
+            background-color: #ecf0f1;
+            border: none;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .list-group-item strong {
+            color: #2c3e50;
+        }
+        ul {
+            margin-top: 10px;
+        }
+        ul li {
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1>Mental Health Prediction</h1>
+        </div>
+        <div class="card shadow p-4 mt-4">
+            <form method="POST" action="/">
+                <div class="mb-3">
+                    <label for="user_input" class="form-label">Describe your issue:</label>
+                    <textarea 
+                        id="user_input" 
+                        name="user_input" 
+                        class="form-control" 
+                        rows="5" 
+                        placeholder="Type your mental health concerns here..." 
+                        required>{{ user_input if user_input else '' }}</textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+
+            {% if response_data %}
+                <div class="mt-5">
+                    <h3 class="text-center">Prediction Results:</h3>
+                    <ul class="list-group mt-3">
+                        {% for i in range(response_data['top_3_categories']|length) %}
+                            <li class="list-group-item">
+                                <strong>{{ response_data['top_3_categories'][i] }}</strong> 
+                                ({{ response_data['top_3_probs'][i]|round(2) }}%)
+                                <br><br>
+                                <strong>Static Suggestions:</strong>
+                                <ul>
+                                    {% for suggestion in response_data['static_suggestions'][response_data['top_3_categories'][i]] %}
+                                        <li>{{ suggestion }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <br>
+                                <strong>GPT Suggestions:</strong>
+                                <ul>
+                                    {% for suggestion in response_data['dynamic_suggestions'][response_data['top_3_categories'][i]].split('. ') %}
+                                        <li>{{ suggestion }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
